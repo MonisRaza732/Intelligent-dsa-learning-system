@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Intelligence — Smart LeetCode Analyzer</title>
+    <meta name="description" content="Analyze your LeetCode profile, predict skill level with ML, and get company-specific DSA question recommendations.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+    <div class="gradient-orb orb-3"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <rect x="2" y="2" width="36" height="36" rx="8" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <path d="M12 28L12 18L18 12L26 18V28" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="20" cy="22" r="3" fill="url(#logoGrad)"/>
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                                <stop stop-color="#6366f1"/>
+                                <stop offset="1" stop-color="#a855f7"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <span class="logo-text">DSA<span class="accent">Intelligence</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="#analyzer" class="nav-link active">Analyzer</a>
+                <a href="#results" class="nav-link">Results</a>
+                <a href="#pipeline" class="nav-link">Pipeline</a>
+                <a href="#recommendations" class="nav-link">Recommendations</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="analyzer">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Powered by Apache Spark + MongoDB
+            </div>
+            <h1 class="hero-title">
+                Your Intelligent<br>
+                <span class="gradient-text">DSA Learning System</span>
+            </h1>
+            <p class="hero-subtitle">
+                Enter your LeetCode username to get AI-powered skill analysis, placement readiness prediction, and personalized company-specific question recommendations.
+            </p>
+            <!-- Search Box -->
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="username-input" placeholder="Enter LeetCode username..." autocomplete="off">
+                    <button id="analyze-btn" class="btn-primary" onclick="analyzeUser()">
+                        <span class="btn-text">Analyze</span>
+                        <span class="btn-loader" style="display:none;">
+                            <svg class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="60" stroke-linecap="round"/></svg>
+                        </span>
+                    </button>
+                </div>
+                <div class="search-hint">Try: <button class="hint-btn" onclick="setUsername('neal_wu')">neal_wu</button> <button class="hint-btn" onclick="setUsername('tourist')">tourist</button> <button class="hint-btn" onclick="setUsername('uwi')">uwi</button></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error Message -->
+    <div id="error-container" class="error-container" style="display:none;">
+        <div class="container">
+            <div class="error-card">
+                <span class="error-icon">⚠️</span>
+                <span id="error-message"></span>
+                <button class="error-close" onclick="hideError()">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <section id="results" class="results-section" style="display:none;">
+        <div class="container">
+            <!-- Profile Card -->
+            <div class="profile-card glass-card animate-in">
+                <div class="profile-header">
+                    <div class="profile-avatar-wrap">
+                        <img id="profile-avatar" src="" alt="Avatar" class="profile-avatar">
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profile-username" class="profile-name"></h2>
+                        <p id="profile-ranking" class="profile-rank"></p>
+                    </div>
+                    <div class="profile-badge" id="skill-badge"></div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="stats-row">
+                    <div class="stat-card stat-total">
+                        <div class="stat-number" id="stat-total">0</div>
+                        <div class="stat-label">Total Solved</div>
+                    </div>
+                    <div class="stat-card stat-easy">
+                        <div class="stat-number" id="stat-easy">0</div>
+                        <div class="stat-label">Easy</div>
+                    </div>
+                    <div class="stat-card stat-medium">
+                        <div class="stat-number" id="stat-medium">0</div>
+                        <div class="stat-label">Medium</div>
+                    </div>
+                    <div class="stat-card stat-hard">
+                        <div class="stat-number" id="stat-hard">0</div>
+                        <div class="stat-label">Hard</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Big Data Pipeline Dashboard -->
+            <div class="section-header animate-in" id="pipeline">
+                <h2 class="section-title">
+                    <span class="section-icon">⚡</span>
+                    Big Data Pipeline
+                </h2>
+            </div>
+
+            <div class="glass-card pipeline-dashboard animate-in">
+                <div class="pipeline-grid">
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">🔥</div>
+                        <div class="pipeline-stat-value" id="pipe-engine">—</div>
+                        <div class="pipeline-stat-label">ML Engine</div>
+                    </div>
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">📊</div>
+                        <div class="pipeline-stat-value" id="pipe-records">—</div>
+                        <div class="pipeline-stat-label">Training Records</div>
+                    </div>
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">🗄️</div>
+                        <div class="pipeline-stat-value" id="pipe-db">—</div>
+                        <div class="pipeline-stat-label">Database</div>
+                    </div>
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">⏱️</div>
+                        <div class="pipeline-stat-value" id="pipe-time">—</div>
+                        <div class="pipeline-stat-label">Pipeline Time</div>
+                    </div>
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">🎯</div>
+                        <div class="pipeline-stat-value" id="pipe-accuracy">—</div>
+                        <div class="pipeline-stat-label">Model Accuracy</div>
+                    </div>
+                    <div class="pipeline-stat">
+                        <div class="pipeline-stat-icon">👥</div>
+                        <div class="pipeline-stat-value" id="pipe-analyses">—</div>
+                        <div class="pipeline-stat-label">Total Analyses</div>
+                    </div>
+                </div>
+                <div class="pipeline-tools">
+                    <span class="pipeline-tool-tag">Apache Spark</span>
+                    <span class="pipeline-tool-tag">PySpark MLlib</span>
+                    <span class="pipeline-tool-tag">MongoDB</span>
+                    <span class="pipeline-tool-tag">Spark SQL</span>
+                    <span class="pipeline-tool-tag">RandomForest</span>
+                    <span class="pipeline-tool-tag">GBT Regressor</span>
+                </div>
+            </div>
+
+            <!-- ML Prediction Section -->
+            <div class="section-header animate-in">
+                <h2 class="section-title">
+                    <span class="section-icon">🧠</span>
+                    ML-Powered Predictions
+                </h2>
+            </div>
+
+            <div class="grid-2 animate-in">
+                <!-- Skill Level Card -->
+                <div class="glass-card prediction-card">
+                    <h3 class="card-title">Skill Level Assessment</h3>
+                    <div class="skill-gauge-wrap">
+                        <div class="skill-gauge" id="skill-gauge">
+                            <svg viewBox="0 0 200 120">
+                                <defs>
+                                    <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#ef4444"/>
+                                        <stop offset="33%" stop-color="#f59e0b"/>
+                                        <stop offset="66%" stop-color="#10b981"/>
+                                        <stop offset="100%" stop-color="#6366f1"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14" stroke-linecap="round"/>
+                                <path id="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gaugeGrad)" stroke-width="14" stroke-linecap="round" stroke-dasharray="0 251.2"/>
+                            </svg>
+                            <div class="gauge-label" id="gauge-label">—</div>
+                        </div>
+                    </div>
+                    <div class="confidence-bars" id="confidence-bars"></div>
+                </div>
+
+                <!-- Placement Readiness Card -->
+                <div class="glass-card prediction-card">
+                    <h3 class="card-title">Placement Readiness</h3>
+                    <div class="readiness-ring-wrap">
+                        <div class="readiness-ring">
+                            <svg viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="70" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="12"/>
+                                <circle id="readiness-circle" cx="80" cy="80" r="70" fill="none" stroke="url(#readinessGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 440" transform="rotate(-90 80 80)"/>
+                                <defs>
+                                    <linearGradient id="readinessGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#6366f1"/>
+                                        <stop offset="100%" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="ring-center">
+                                <div class="ring-value" id="readiness-value">0</div>
+                                <div class="ring-label">/ 100</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="readiness-badge" id="readiness-badge"></div>
+                    <div class="contest-stats" id="contest-stats"></div>
+                </div>
+            </div>
+
+            <!-- Topic Analysis -->
+            <div class="section-header animate-in">
+                <h2 class="section-title">
+                    <span class="section-icon">📊</span>
+                    Topic-Wise Analysis
+                </h2>
+            </div>
+
+            <div class="grid-2 animate-in">
+                <div class="glass-card">
+                    <h3 class="card-title strength-title">💪 Strengths</h3>
+                    <div id="strengths-list" class="topic-list"></div>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title weakness-title">🎯 Areas to Improve</h3>
+                    <div id="weaknesses-list" class="topic-list"></div>
+                </div>
+            </div>
+
+            <!-- All Topics Chart -->
+            <div class="glass-card animate-in" id="all-topics-card">
+                <h3 class="card-title">All Topics Breakdown</h3>
+                <div id="topics-chart" class="topics-chart"></div>
+            </div>
+
+            <!-- Study Plan -->
+            <div class="section-header animate-in">
+                <h2 class="section-title">
+                    <span class="section-icon">📚</span>
+                    Personalized Study Plan
+                </h2>
+            </div>
+
+            <div class="glass-card study-plan-card animate-in">
+                <div class="plan-header">
+                    <div class="plan-target">
+                        <span class="plan-target-number" id="daily-target">0</span>
+                        <span class="plan-target-label">problems/day</span>
+                    </div>
+                    <div class="plan-focus" id="focus-areas"></div>
+                </div>
+                <div class="plan-schedule" id="weekly-plan"></div>
+                <div class="plan-milestones" id="milestones"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recommendations Section -->
+    <section id="recommendations" class="recommendations-section" style="display:none;">
+        <div class="container">
+            <div class="section-header animate-in">
+                <h2 class="section-title">
+                    <span class="section-icon">🏢</span>
+                    Company-Specific Recommendations
+                </h2>
+            </div>
+
+            <div class="company-filter animate-in">
+                <button class="company-btn active" data-company="all" onclick="filterCompany('all')">All Companies</button>
+                <div id="company-buttons"></div>
+            </div>
+
+            <div id="recommendations-grid" class="recommendations-grid animate-in"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>DSA Intelligence — Built with Flask, Apache Spark, MongoDB & ❤️</p>
+        </div>
+    </footer>
+
+    <!-- AI Chat Widget -->
+    <button class="ai-chat-btn" id="ai-chat-toggle" aria-label="Open AI Assistant">
+        <svg viewBox="0 0 24 24">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-linejoin="round"/>
+            <path d="M9 10h.01M15 10h.01M12 10h.01" stroke-linecap="round"/>
+        </svg>
+    </button>
+
+    <div class="ai-chat-window" id="ai-chat-window">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title-group">
+                <div class="ai-chat-avatar">✨</div>
+                <div>
+                    <h3 class="ai-chat-title">AI Study Assistant</h3>
+                    <div class="ai-chat-status">Online</div>
+                </div>
+            </div>
+            <button class="ai-chat-close" id="ai-chat-close">×</button>
+        </div>
+        
+        <div class="ai-chat-messages" id="ai-chat-messages">
+            <div class="chat-msg bot">
+                Hi! I'm your AI Assistant. Analyze a LeetCode profile first, and then I can give you personalized study advice!
+            </div>
+        </div>
+        
+        <div class="ai-chat-input-area">
+            <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Ask about your stats or interview prep..." autocomplete="off" disabled>
+            <button class="ai-chat-send" id="ai-chat-send" disabled>
+                <svg viewBox="0 0 24 24">
+                    <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+{
+    "Google": {
+        "focus_topics": ["Dynamic Programming", "Graph", "Binary Search", "Greedy", "Tree"],
+        "questions": [
+            {"title": "Median of Two Sorted Arrays", "slug": "median-of-two-sorted-arrays", "difficulty": "Hard", "topic": "Binary Search"},
+            {"title": "Longest Substring Without Repeating Characters", "slug": "longest-substring-without-repeating-characters", "difficulty": "Medium", "topic": "Sliding Window"},
+            {"title": "Trapping Rain Water", "slug": "trapping-rain-water", "difficulty": "Hard", "topic": "Stack"},
+            {"title": "Merge k Sorted Lists", "slug": "merge-k-sorted-lists", "difficulty": "Hard", "topic": "Heap"},
+            {"title": "Word Break", "slug": "word-break", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Course Schedule", "slug": "course-schedule", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Serialize and Deserialize Binary Tree", "slug": "serialize-and-deserialize-binary-tree", "difficulty": "Hard", "topic": "Tree"},
+            {"title": "Minimum Window Substring", "slug": "minimum-window-substring", "difficulty": "Hard", "topic": "Sliding Window"},
+            {"title": "Number of Islands", "slug": "number-of-islands", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Decode Ways", "slug": "decode-ways", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Longest Increasing Subsequence", "slug": "longest-increasing-subsequence", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Word Ladder", "slug": "word-ladder", "difficulty": "Hard", "topic": "Graph"}
+        ]
+    },
+    "Amazon": {
+        "focus_topics": ["Array", "Tree", "Graph", "Dynamic Programming", "String"],
+        "questions": [
+            {"title": "Two Sum", "slug": "two-sum", "difficulty": "Easy", "topic": "Array"},
+            {"title": "Longest Palindromic Substring", "slug": "longest-palindromic-substring", "difficulty": "Medium", "topic": "String"},
+            {"title": "LRU Cache", "slug": "lru-cache", "difficulty": "Medium", "topic": "Design"},
+            {"title": "Rotting Oranges", "slug": "rotting-oranges", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "K Closest Points to Origin", "slug": "k-closest-points-to-origin", "difficulty": "Medium", "topic": "Heap"},
+            {"title": "Word Search II", "slug": "word-search-ii", "difficulty": "Hard", "topic": "Trie"},
+            {"title": "Copy List with Random Pointer", "slug": "copy-list-with-random-pointer", "difficulty": "Medium", "topic": "Linked List"},
+            {"title": "Validate Binary Search Tree", "slug": "validate-binary-search-tree", "difficulty": "Medium", "topic": "Tree"},
+            {"title": "Reorder Data in Log Files", "slug": "reorder-data-in-log-files", "difficulty": "Medium", "topic": "String"},
+            {"title": "Partition Labels", "slug": "partition-labels", "difficulty": "Medium", "topic": "Greedy"},
+            {"title": "Min Cost to Connect All Points", "slug": "min-cost-to-connect-all-points", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Binary Tree Zigzag Level Order Traversal", "slug": "binary-tree-zigzag-level-order-traversal", "difficulty": "Medium", "topic": "Tree"}
+        ]
+    },
+    "Microsoft": {
+        "focus_topics": ["Array", "String", "Tree", "Dynamic Programming", "Linked List"],
+        "questions": [
+            {"title": "Add Two Numbers", "slug": "add-two-numbers", "difficulty": "Medium", "topic": "Linked List"},
+            {"title": "String to Integer (atoi)", "slug": "string-to-integer-atoi", "difficulty": "Medium", "topic": "String"},
+            {"title": "Spiral Matrix", "slug": "spiral-matrix", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Group Anagrams", "slug": "group-anagrams", "difficulty": "Medium", "topic": "String"},
+            {"title": "Reverse Linked List", "slug": "reverse-linked-list", "difficulty": "Easy", "topic": "Linked List"},
+            {"title": "Unique Paths", "slug": "unique-paths", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Set Matrix Zeroes", "slug": "set-matrix-zeroes", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Excel Sheet Column Number", "slug": "excel-sheet-column-number", "difficulty": "Easy", "topic": "Math"},
+            {"title": "Binary Tree Level Order Traversal", "slug": "binary-tree-level-order-traversal", "difficulty": "Medium", "topic": "Tree"},
+            {"title": "Populating Next Right Pointers in Each Node", "slug": "populating-next-right-pointers-in-each-node", "difficulty": "Medium", "topic": "Tree"},
+            {"title": "Rotate Image", "slug": "rotate-image", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Tic-Tac-Toe", "slug": "find-winner-on-a-tic-tac-toe-game", "difficulty": "Easy", "topic": "Array"}
+        ]
+    },
+    "Meta": {
+        "focus_topics": ["Array", "String", "Binary Search", "Tree", "Graph"],
+        "questions": [
+            {"title": "Valid Palindrome II", "slug": "valid-palindrome-ii", "difficulty": "Easy", "topic": "String"},
+            {"title": "Subarray Sum Equals K", "slug": "subarray-sum-equals-k", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Random Pick with Weight", "slug": "random-pick-with-weight", "difficulty": "Medium", "topic": "Binary Search"},
+            {"title": "Lowest Common Ancestor of a Binary Tree", "slug": "lowest-common-ancestor-of-a-binary-tree", "difficulty": "Medium", "topic": "Tree"},
+            {"title": "Vertical Order Traversal of a Binary Tree", "slug": "vertical-order-traversal-of-a-binary-tree", "difficulty": "Hard", "topic": "Tree"},
+            {"title": "Nested List Weight Sum", "slug": "nested-list-weight-sum", "difficulty": "Medium", "topic": "DFS"},
+            {"title": "Buildings With an Ocean View", "slug": "buildings-with-an-ocean-view", "difficulty": "Medium", "topic": "Stack"},
+            {"title": "Dot Product of Two Sparse Vectors", "slug": "dot-product-of-two-sparse-vectors", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Making A Large Island", "slug": "making-a-large-island", "difficulty": "Hard", "topic": "Graph"},
+            {"title": "Accounts Merge", "slug": "accounts-merge", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Range Sum of BST", "slug": "range-sum-of-bst", "difficulty": "Easy", "topic": "Tree"},
+            {"title": "Pow(x, n)", "slug": "powx-n", "difficulty": "Medium", "topic": "Math"}
+        ]
+    },
+    "Apple": {
+        "focus_topics": ["Array", "Tree", "String", "Linked List", "Dynamic Programming"],
+        "questions": [
+            {"title": "3Sum", "slug": "3sum", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Maximum Subarray", "slug": "maximum-subarray", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Letter Combinations of a Phone Number", "slug": "letter-combinations-of-a-phone-number", "difficulty": "Medium", "topic": "Backtracking"},
+            {"title": "Valid Parentheses", "slug": "valid-parentheses", "difficulty": "Easy", "topic": "Stack"},
+            {"title": "Symmetric Tree", "slug": "symmetric-tree", "difficulty": "Easy", "topic": "Tree"},
+            {"title": "House Robber", "slug": "house-robber", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Product of Array Except Self", "slug": "product-of-array-except-self", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Merge Two Sorted Lists", "slug": "merge-two-sorted-lists", "difficulty": "Easy", "topic": "Linked List"},
+            {"title": "Climbing Stairs", "slug": "climbing-stairs", "difficulty": "Easy", "topic": "Dynamic Programming"},
+            {"title": "Container With Most Water", "slug": "container-with-most-water", "difficulty": "Medium", "topic": "Two Pointers"},
+            {"title": "Number of 1 Bits", "slug": "number-of-1-bits", "difficulty": "Easy", "topic": "Bit Manipulation"},
+            {"title": "Best Time to Buy and Sell Stock", "slug": "best-time-to-buy-and-sell-stock", "difficulty": "Easy", "topic": "Array"}
+        ]
+    },
+    "Goldman Sachs": {
+        "focus_topics": ["Math", "Array", "Dynamic Programming", "String", "Greedy"],
+        "questions": [
+            {"title": "Roman to Integer", "slug": "roman-to-integer", "difficulty": "Easy", "topic": "Math"},
+            {"title": "Coin Change", "slug": "coin-change", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Merge Intervals", "slug": "merge-intervals", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Longest Common Subsequence", "slug": "longest-common-subsequence", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Jump Game", "slug": "jump-game", "difficulty": "Medium", "topic": "Greedy"},
+            {"title": "Maximum Product Subarray", "slug": "maximum-product-subarray", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Count and Say", "slug": "count-and-say", "difficulty": "Medium", "topic": "String"},
+            {"title": "Valid Anagram", "slug": "valid-anagram", "difficulty": "Easy", "topic": "String"},
+            {"title": "Fibonacci Number", "slug": "fibonacci-number", "difficulty": "Easy", "topic": "Math"},
+            {"title": "Palindrome Number", "slug": "palindrome-number", "difficulty": "Easy", "topic": "Math"},
+            {"title": "Pow(x, n)", "slug": "powx-n", "difficulty": "Medium", "topic": "Math"},
+            {"title": "Generate Parentheses", "slug": "generate-parentheses", "difficulty": "Medium", "topic": "Backtracking"}
+        ]
+    },
+    "Uber": {
+        "focus_topics": ["Graph", "Dynamic Programming", "Design", "Array", "Tree"],
+        "questions": [
+            {"title": "Word Search", "slug": "word-search", "difficulty": "Medium", "topic": "Backtracking"},
+            {"title": "Combination Sum", "slug": "combination-sum", "difficulty": "Medium", "topic": "Backtracking"},
+            {"title": "Clone Graph", "slug": "clone-graph", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Task Scheduler", "slug": "task-scheduler", "difficulty": "Medium", "topic": "Greedy"},
+            {"title": "Pacific Atlantic Water Flow", "slug": "pacific-atlantic-water-flow", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Flatten Nested List Iterator", "slug": "flatten-nested-list-iterator", "difficulty": "Medium", "topic": "Design"},
+            {"title": "Cheapest Flights Within K Stops", "slug": "cheapest-flights-within-k-stops", "difficulty": "Medium", "topic": "Graph"},
+            {"title": "Design Add and Search Words Data Structure", "slug": "design-add-and-search-words-data-structure", "difficulty": "Medium", "topic": "Trie"},
+            {"title": "Meeting Rooms II", "slug": "meeting-rooms-ii", "difficulty": "Medium", "topic": "Heap"},
+            {"title": "Insert Delete GetRandom O(1)", "slug": "insert-delete-getrandom-o1", "difficulty": "Medium", "topic": "Design"},
+            {"title": "Reconstruct Itinerary", "slug": "reconstruct-itinerary", "difficulty": "Hard", "topic": "Graph"},
+            {"title": "Alien Dictionary", "slug": "alien-dictionary", "difficulty": "Hard", "topic": "Graph"}
+        ]
+    },
+    "Adobe": {
+        "focus_topics": ["Array", "String", "Math", "Dynamic Programming", "Tree"],
+        "questions": [
+            {"title": "Reverse Integer", "slug": "reverse-integer", "difficulty": "Medium", "topic": "Math"},
+            {"title": "ZigZag Conversion", "slug": "zigzag-conversion", "difficulty": "Medium", "topic": "String"},
+            {"title": "Search in Rotated Sorted Array", "slug": "search-in-rotated-sorted-array", "difficulty": "Medium", "topic": "Binary Search"},
+            {"title": "Find First and Last Position of Element in Sorted Array", "slug": "find-first-and-last-position-of-element-in-sorted-array", "difficulty": "Medium", "topic": "Binary Search"},
+            {"title": "Permutations", "slug": "permutations", "difficulty": "Medium", "topic": "Backtracking"},
+            {"title": "Sort Colors", "slug": "sort-colors", "difficulty": "Medium", "topic": "Array"},
+            {"title": "Edit Distance", "slug": "edit-distance", "difficulty": "Medium", "topic": "Dynamic Programming"},
+            {"title": "Longest Valid Parentheses", "slug": "longest-valid-parentheses", "difficulty": "Hard", "topic": "Dynamic Programming"},
+            {"title": "Kth Largest Element in an Array", "slug": "kth-largest-element-in-an-array", "difficulty": "Medium", "topic": "Heap"},
+            {"title": "Top K Frequent Elements", "slug": "top-k-frequent-elements", "difficulty": "Medium", "topic": "Heap"},
+            {"title": "Path Sum", "slug": "path-sum", "difficulty": "Easy", "topic": "Tree"},
+            {"title": "Binary Tree Inorder Traversal", "slug": "binary-tree-inorder-traversal", "difficulty": "Easy", "topic": "Tree"}
+        ]
+    }
+}
