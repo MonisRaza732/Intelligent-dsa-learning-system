@@ -67,7 +67,8 @@
                             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
                         </svg>
                     </div>
-                    <input type="text" id="username-input" placeholder="Enter LeetCode username..." autocomplete="off">
+                    <input type="text" id="username-input" placeholder="LeetCode Username" autocomplete="off" style="width: 45%;">
+                    <input type="text" id="github-input" placeholder="GitHub Username (Optional)" autocomplete="off" style="width: 45%; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 16px; margin-left: 8px;">
                     <button id="analyze-btn" class="btn-primary" onclick="analyzeUser()">
                         <span class="btn-text">Analyze</span>
                         <span class="btn-loader" style="display:none;">
@@ -75,7 +76,7 @@
                         </span>
                     </button>
                 </div>
-                <div class="search-hint">Try: <button class="hint-btn" onclick="setUsername('neal_wu')">neal_wu</button> <button class="hint-btn" onclick="setUsername('tourist')">tourist</button> <button class="hint-btn" onclick="setUsername('uwi')">uwi</button></div>
+                <div class="search-hint">Try LeetCode: <button class="hint-btn" onclick="setUsername('neal_wu')">neal_wu</button> and GitHub: <button class="hint-btn" onclick="setGithub('nealwu')">nealwu</button></div>
             </div>
         </div>
     </section>
@@ -125,6 +126,35 @@
                     <div class="stat-card stat-hard">
                         <div class="stat-number" id="stat-hard">0</div>
                         <div class="stat-label">Hard</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GitHub Card -->
+            <div id="github-card" class="glass-card animate-in" style="display:none; margin-top:20px;">
+                <div class="profile-header">
+                    <div class="profile-avatar-wrap">
+                        <img id="github-avatar" src="" alt="GitHub Avatar" class="profile-avatar">
+                        <div class="avatar-ring" style="background:conic-gradient(from 0deg, #10b981, #34d399, #10b981);"></div>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="github-username" class="profile-name"></h2>
+                        <p id="github-followers" class="profile-rank"></p>
+                    </div>
+                    <div class="profile-badge" id="github-bonus-badge" style="background:color-mix(in srgb, #10b981 15%, transparent);color:#10b981;border:1px solid #10b981;">Bonus Applied!</div>
+                </div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-number" id="github-repos">0</div>
+                        <div class="stat-label">Public Repos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="github-stars">0</div>
+                        <div class="stat-label" style="color: gold;">⭐ Total Stars</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="github-langs" style="font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">—</div>
+                        <div class="stat-label">Top Languages</div>
                     </div>
                 </div>
             </div>
@@ -298,6 +328,32 @@
             <div class="company-filter animate-in">
                 <button class="company-btn active" data-company="all" onclick="filterCompany('all')">All Companies</button>
                 <div id="company-buttons"></div>
+            </div>
+
+            <!-- Readiness Checker -->
+            <div class="section-header animate-in" id="readiness" style="margin-top: 40px;">
+                <h2 class="section-title">
+                    <span class="gradient-text">🎯 Readiness Checker</span>
+                </h2>
+                <p class="section-subtitle">Test if you are ready for a specific company interview or a specific LeetCode question.</p>
+            </div>
+            
+            <div class="glass-card animate-in" id="readiness-section" style="margin-bottom: 40px; border: 1px solid rgba(168, 85, 247, 0.3);">
+                <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                    <select id="readiness-type" class="ai-chat-input" style="width: auto; background: rgba(0,0,0,0.3);">
+                        <option value="company">Check Company</option>
+                        <option value="question">Check Question</option>
+                    </select>
+                    <input type="text" id="readiness-target" class="ai-chat-input" placeholder="e.g. Google, Target Sum..." style="flex: 1; background: rgba(0,0,0,0.3);">
+                    <button class="btn-primary" onclick="checkReadiness()" style="padding: 10px 20px;">
+                        Check Now
+                    </button>
+                </div>
+                
+                <div id="readiness-result" style="display: none; padding: 20px; border-radius: 12px; font-size: 1.1rem; line-height: 1.5; align-items: flex-start; gap: 15px;">
+                    <div id="readiness-icon" style="font-size: 2rem;"></div>
+                    <div id="readiness-message"></div>
+                </div>
             </div>
 
             <div id="recommendations-grid" class="recommendations-grid animate-in"></div>

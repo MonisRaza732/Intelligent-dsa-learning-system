@@ -10,8 +10,9 @@ from leetcode_fetcher import fetch_all_user_data
 from spark_ml import spark_predictor
 from mongo_handler import mongo
 from data_pipeline import pipeline
-from recommender import recommend_questions, get_study_plan, analyze_topics
+from recommender import recommend_questions, get_study_plan, analyze_topics, check_readiness
 from ai_agent import ai_assistant
+from github_fetcher import fetch_github_data
 
 app = Flask(__name__)
 CORS(app)
@@ -51,21 +52,47 @@ def index():
 def analyze_user():
     """
     Main analysis endpoint.
-    Fetches LeetCode data, runs Spark ML prediction, stores in MongoDB.
+    Fetches LeetCode data, optional GitHub data, runs Spark ML prediction, stores in MongoDB.
     """
     data = request.get_json()
     username = data.get("username", "").strip()
+    github_username = data.get("github_username", "").strip()
 
     if not username:
-        return jsonify({"error": "Username is required"}), 400
+        return jsonify({"error": "LeetCode Username is required"}), 400
 
     # Fetch LeetCode data via GraphQL
     user_data = fetch_all_user_data(username)
     if user_data is None:
         return jsonify({"error": f"User '{username}' not found on LeetCode"}), 404
 
+    # Fetch GitHub data if provided
+    github_data = None
+    if github_username:
+        github_data = fetch_github_data(github_username)
+        user_data["github"] = github_data
+
     # ML Prediction (PySpark MLlib or scikit-learn fallback)
     prediction = spark_predictor.predict(user_data)
+
+    # --- GitHub Placement Readiness Bonus ---
+    if github_data:
+        stars = github_data.get("total_stars", 0)
+        repos = github_data.get("public_repos", 0)
+        
+        bonus = 0
+        if stars > 100: bonus += 15
+        elif stars > 50: bonus += 10
+        elif stars > 10: bonus += 5
+        
+        if repos > 20: bonus += 5
+        elif repos > 5: bonus += 2
+        
+        if bonus > 0:
+            old_score = prediction.get("placement_readiness", 0)
+            new_score = min(100, old_score + bonus)
+            prediction["placement_readiness"] = new_score
+            prediction["github_bonus_applied"] = bonus
 
     # Topic Analysis
     topic_analysis = analyze_topics(user_data)
@@ -171,6 +198,48 @@ def chat():
     return jsonify({
         "success": True,
         "reply": reply
+    })
+
+@app.route("/api/check_readiness", methods=["POST"])
+def check_readiness_api():
+    data = request.get_json()
+    username = data.get("username", "").strip()
+    github_username = data.get("github_username", "").strip()
+    target_type = data.get("target_type", "").strip()
+    target_name = data.get("target_name", "").strip()
+
+    if not username or not target_type or not target_name:
+        return jsonify({"error": "Missing required fields"}), 400
+
+    user_data = fetch_all_user_data(username)
+    if user_data is None:
+        return jsonify({"error": f"User '{username}' not found"}), 404
+
+    if github_username:
+        user_data["github"] = fetch_github_data(github_username)
+
+    # ML Prediction
+    prediction = spark_predictor.predict(user_data)
+    
+    # Github Bonus factor
+    if "github" in user_data and user_data["github"]:
+        stars = user_data["github"].get("total_stars", 0)
+        repos = user_data["github"].get("public_repos", 0)
+        bonus = 0
+        if stars > 100: bonus += 15
+        elif stars > 50: bonus += 10
+        elif stars > 10: bonus += 5
+        if repos > 20: bonus += 5
+        elif repos > 5: bonus += 2
+        if bonus > 0:
+            prediction["placement_readiness"] = min(100, prediction.get("placement_readiness", 0) + bonus)
+            prediction["github_bonus_applied"] = bonus
+
+    result = check_readiness(user_data, prediction, target_type, target_name)
+    
+    return jsonify({
+        "success": True,
+        "result": result
     })
 
 if __name__ == "__main__":

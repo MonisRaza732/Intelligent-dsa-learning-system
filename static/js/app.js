@@ -14,6 +14,10 @@ function setUsername(name) {
     document.getElementById('username-input').focus();
 }
 
+function setGithub(name) {
+    document.getElementById('github-input').value = name;
+}
+
 function showError(msg) {
     document.getElementById('error-message').textContent = msg;
     document.getElementById('error-container').style.display = 'block';
@@ -53,6 +57,8 @@ function animateCounter(elementId, target, duration = 1200) {
 // ── Main Analyze Function ──
 async function analyzeUser() {
     const username = document.getElementById('username-input').value.trim();
+    const githubUsername = document.getElementById('github-input').value.trim();
+    
     if (!username) {
         showError('Please enter a LeetCode username');
         return;
@@ -62,13 +68,14 @@ async function analyzeUser() {
     setLoading(true);
     document.getElementById('results').style.display = 'none';
     document.getElementById('recommendations').style.display = 'none';
+    document.getElementById('github-card').style.display = 'none';
 
     try {
         // Fetch analysis
         const res = await fetch('/api/analyze', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username })
+            body: JSON.stringify({ username, github_username: githubUsername })
         });
 
         const data = await res.json();
@@ -95,6 +102,9 @@ async function analyzeUser() {
 
         // Render everything
         renderProfile(data);
+        if (data.user_data.github) {
+            renderGithubProfile(data.user_data.github, data.prediction);
+        }
         renderPredictions(data.prediction);
         renderTopicAnalysis(data.topic_analysis);
         renderStudyPlan(data.study_plan);
@@ -143,6 +153,34 @@ function renderProfile(data) {
     animateCounter('stat-easy', user.stats.easy);
     animateCounter('stat-medium', user.stats.medium);
     animateCounter('stat-hard', user.stats.hard);
+}
+
+// ── Render GitHub Profile ──
+function renderGithubProfile(githubData, prediction) {
+    const card = document.getElementById('github-card');
+    card.style.display = 'block';
+
+    document.getElementById('github-avatar').src = githubData.avatar_url || '';
+    document.getElementById('github-username').textContent = githubData.username || 'GitHub User';
+    document.getElementById('github-followers').textContent = `${githubData.followers} Followers`;
+
+    animateCounter('github-repos', githubData.public_repos);
+    animateCounter('github-stars', githubData.total_stars);
+
+    const langsDiv = document.getElementById('github-langs');
+    if (githubData.top_languages && githubData.top_languages.length > 0) {
+        langsDiv.textContent = githubData.top_languages.join(', ');
+    } else {
+        langsDiv.textContent = 'None';
+    }
+
+    const badge = document.getElementById('github-bonus-badge');
+    if (prediction.github_bonus_applied > 0) {
+        badge.style.display = 'inline-block';
+        badge.textContent = `+${prediction.github_bonus_applied} Readiness Bonus`;
+    } else {
+        badge.style.display = 'none';
+    }
 }
 
 // ── Render Predictions ──
@@ -496,3 +534,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// ── Readiness Checker ──
+async function checkReadiness() {
+    const type = document.getElementById('readiness-type').value;
+    const target = document.getElementById('readiness-target').value.trim();
+    const resultBox = document.getElementById('readiness-result');
+    const resultIcon = document.getElementById('readiness-icon');
+    const resultMsg = document.getElementById('readiness-message');
+    
+    if (!target) {
+        alert("Please enter a Target to check.");
+        return;
+    }
+    
+    if (!window.currentData) {
+        alert("Please Analyze a User First!");
+        return;
+    }
+    
+    const username = window.currentData.user_data.username;
+    const githubUsername = document.getElementById('github-input') ? document.getElementById('github-input').value.trim() : '';
+    
+    resultBox.style.display = 'flex';
+    resultIcon.textContent = '⏳';
+    resultMsg.innerHTML = `<em>Checking readiness for ${target}...</em>`;
+    resultBox.style.background = 'rgba(255, 255, 255, 0.05)';
+    
+    try {
+        const res = await fetch('/api/check_readiness', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: username,
+                github_username: githubUsername,
+                target_type: type,
+                target_name: target
+            })
+        });
+        
+        const data = await res.json();
+        
+        if (data.success) {
+            const r = data.result;
+            let msg = r.message.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
+            
+            resultMsg.innerHTML = msg;
+            
+            if (r.ready) {
+                resultIcon.textContent = '✅';
+                resultBox.style.background = 'rgba(16, 185, 129, 0.15)';
+                resultBox.style.border = '1px solid rgba(16, 185, 129, 0.5)';
+            } else {
+                resultIcon.textContent = '❌';
+                resultBox.style.background = 'rgba(239, 68, 68, 0.15)';
+                resultBox.style.border = '1px solid rgba(239, 68, 68, 0.5)';
+            }
+        } else {
+            resultIcon.textContent = '⚠️';
+            resultMsg.textContent = data.error || 'Check failed.';
+            resultBox.style.background = 'rgba(239, 68, 68, 0.15)';
+            resultBox.style.border = '1px solid rgba(239, 68, 68, 0.5)';
+        }
+    } catch(e) {
+        resultIcon.textContent = '⚠️';
+        resultMsg.textContent = 'Network error during checking.';
+    }
+}

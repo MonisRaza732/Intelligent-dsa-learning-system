@@ -263,3 +263,76 @@ def fetch_all_user_data(username):
         "recent_submissions": recent_submissions,
         "ranking": ranking
     }
+
+_problems_cache = {}
+
+def get_problem_slug(query):
+    """
+    Attempts to resolve a user query (like '12', '#12', 'Two Sum') to a valid LeetCode titleSlug.
+    Uses an in-memory cache of the problems/all endpoint.
+    """
+    global _problems_cache
+    if not _problems_cache:
+        try:
+            res = requests.get("https://leetcode.com/api/problems/all/", timeout=10)
+            if res.status_code == 200:
+                data = res.json()
+                for stat in data.get("stat_status_pairs", []):
+                    q_id = str(stat["stat"]["frontend_question_id"])
+                    slug = stat["stat"]["question__title_slug"]
+                    title = stat["stat"]["question__title"].lower()
+                    _problems_cache[q_id] = slug
+                    _problems_cache[title] = slug
+        except Exception as e:
+            print(f"Error fetching problems dict: {e}")
+            
+    query = str(query).lower().strip()
+    if query.startswith("#"):
+        query = query[1:]
+        
+    # Check if exact match exists
+    if query in _problems_cache:
+        return _problems_cache[query]
+        
+    # If not, assume the query is already a slug or replace spaces with hyphens
+    return query.replace(" ", "-")
+
+
+def fetch_question_data(title_slug):
+    """Fetch specific LeetCode question information (difficulty, tags) by title slug."""
+    query = """
+    query questionData($titleSlug: String!) {
+        question(titleSlug: $titleSlug) {
+            questionId
+            title
+            difficulty
+            topicTags {
+                name
+                slug
+            }
+        }
+    }
+    """
+    variables = {"titleSlug": title_slug}
+    try:
+        response = requests.post(
+            LEETCODE_GRAPHQL_URL,
+            json={"query": query, "variables": variables},
+            headers=HEADERS,
+            timeout=10
+        )
+        response.raise_for_status()
+        data = response.json()
+        question = data.get("data", {}).get("question")
+        if not question:
+            return None
+            
+        topics = [tag["slug"] for tag in question.get("topicTags", [])]
+        return {
+            "title": question.get("title"),
+            "difficulty": question.get("difficulty"),
+            "topics": topics
+        }
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching question data: {e}")
+        return None

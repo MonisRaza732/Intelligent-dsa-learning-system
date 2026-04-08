@@ -220,3 +220,93 @@ def get_study_plan(user_data, prediction=None):
         ]
 
     return plan
+
+
+def check_readiness(user_data, prediction, target_type, target_name):
+    """
+    Check if a user is ready for a specific company or question.
+    target_type: 'company' or 'question'
+    target_name: string representing company or question name
+    """
+    if not prediction:
+        return {"ready": False, "message": "Prediction data is missing. Please analyze a profile first.", "target": target_name}
+
+    skill_level = prediction.get("skill_level", "Beginner")
+    placement_readiness = prediction.get("placement_readiness", 0)
+    topic_analysis = analyze_topics(user_data)
+    weak_topics = [t["name"].lower() for t in topic_analysis.get("weaknesses", [])]
+    
+    target_name_lower = target_name.lower().strip()
+    
+    if target_type == "company":
+        company_tiers = {
+            "google": {"min_readiness": 85, "min_skill": ["Advanced", "Expert"]},
+            "meta": {"min_readiness": 80, "min_skill": ["Advanced", "Expert"]},
+            "amazon": {"min_readiness": 70, "min_skill": ["Intermediate", "Advanced", "Expert"]},
+            "microsoft": {"min_readiness": 70, "min_skill": ["Intermediate", "Advanced", "Expert"]},
+            "apple": {"min_readiness": 75, "min_skill": ["Intermediate", "Advanced", "Expert"]},
+        }
+        
+        tier = company_tiers.get(target_name_lower, {"min_readiness": 60, "min_skill": ["Intermediate", "Advanced", "Expert"]})
+        
+        is_ready = placement_readiness >= tier["min_readiness"] and skill_level in tier["min_skill"]
+        
+        if is_ready:
+            message = f"You are **READY** for {target_name.capitalize()}! Your placement readiness ({placement_readiness}/100) and {skill_level} skill level meet the typical bar. Make sure to review your weak topics before interviewing."
+        else:
+            message = f"You need more preparation for {target_name.capitalize()}. They typically require a readiness score of {tier['min_readiness']}+ (You have {placement_readiness}). Keep grinding!"
+            
+        return {"ready": bool(is_ready), "message": message, "target": target_name}
+        
+    elif target_type == "question":
+        from leetcode_fetcher import get_problem_slug, fetch_question_data
+        
+        slug = get_problem_slug(target_name)
+        q_data = fetch_question_data(slug)
+        
+        q_diff = "Medium"
+        q_topic = "general"
+        found = False
+        
+        if q_data:
+            q_diff = q_data["difficulty"]
+            q_topic = q_data["topics"][0] if q_data["topics"] else "general"
+            target_name = q_data["title"]
+            found = True
+        else:
+            # Fallback to local DB if API fails
+            company_db = load_company_questions()
+            for comp, data in company_db.items():
+                for q in data["questions"]:
+                    if target_name_lower in q["title"].lower() or target_name_lower == q["slug"]:
+                        q_diff = q["difficulty"]
+                        q_topic = q["topic"].lower()
+                        target_name = q["title"]
+                        found = True
+                        break
+                if found: break
+            
+        is_ready = False
+        if q_diff == "Easy":
+            is_ready = True
+        elif q_diff == "Medium":
+            is_ready = skill_level in ["Intermediate", "Advanced", "Expert"]
+        elif q_diff == "Hard":
+            is_ready = skill_level in ["Advanced", "Expert"]
+            
+        if q_topic in weak_topics and q_diff != "Easy":
+            is_ready = False
+            
+        if is_ready:
+            message = f"You are **READY** to tackle '{target_name}'. As a {skill_level}, this {q_diff} {q_topic.capitalize()} problem is well within your capabilities."
+        else:
+            if not found:
+                 message = f"Assuming '{target_name}' is a Medium problem, it might be tough. Make sure you are comfortable with core data structures."
+            elif q_topic in weak_topics:
+                 message = f"You are **NOT READY** for '{target_name}'. It is a {q_diff} problem focusing on {q_topic.capitalize()}, which is currently one of your weakest areas."
+            else:
+                 message = f"You are **NOT READY** for '{target_name}'. It is a {q_diff} problem. You should focus on leveling up from {skill_level} before tackling this."
+                 
+        return {"ready": bool(is_ready), "message": message, "target": target_name, "found": found, "difficulty": q_diff, "topic": q_topic}
+    
+    return {"ready": False, "message": "Invalid check type. Use 'company' or 'question'.", "target": target_name}
